@@ -1,0 +1,17 @@
+.btn1 {
+  margin: auto;
+  margin-top: 50px;
+  margin-left: 30%;
+}
+.playingUsers {
+  background-color: #ecf1f3;
+  height: 900px;
+  display: flow-root;
+  align-items: center;
+}
+.playusercard {
+  width: 40%;
+  height: 100px;
+  margin: auto;
+  margin-top: 20px;
+}

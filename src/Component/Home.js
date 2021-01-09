@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./Home.css";
+import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+import { Link } from "react-router-dom";
 import Pagination from "@material-ui/lab/Pagination";
-import PlayingUsers from "./PlayingUsers";
 import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import TextField from "@material-ui/core/TextField";
@@ -9,7 +10,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import SearchIcon from "@material-ui/icons/Search";
 import Checkbox from "@material-ui/core/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
-import { Container, Row, Col, Table } from "reactstrap";
+import {
+  Container,
+  Card,
+  Button,
+  CardTitle,
+  CardBody,
+  Row,
+  Col,
+  Table,
+} from "reactstrap";
 import { LOAD_USER, LOAD_PLAYINGUSER } from "./../redux/actionTypes";
 
 function Home() {
@@ -55,22 +65,55 @@ function Home() {
   };
   const handleSelect = (e) => {
     var name = e.target.value;
-    var playing = playingUsers;
+    var user = users.find((element) => element.Name === name);
     if (e.target.checked) {
-      playing.push(name);
-      setplayingUsers(playing);
+      setplayingUsers([...playingUsers, user]);
     } else {
-      var index = playing.findIndex((element) => element === name);
-      playing.splice(index, 1);
-      setplayingUsers(playing);
+      var index = playingUsers.findIndex((element) => element === user);
+      var u = [...playingUsers];
+      u.splice(index, 1);
+      setplayingUsers([...u]);
     }
-    dispatch({ type: LOAD_PLAYINGUSER, Users: playing });
+    dispatch({ type: LOAD_PLAYINGUSER, Users: playingUsers });
   };
   return (
     <Container fluid className="home">
       <Row>
         <Col xs="2" className="home__left">
-          <PlayingUsers user={playingUsers} />
+          <div className="selectplayercard">
+            <h4>Playing 9</h4>
+            {playingUsers.length > -1 &&
+              playingUsers.map((user) => {
+                return (
+                  <div>
+                    <Card className="selectedUserCard">
+                      <CardBody className="selectedUser">
+                        <Avatar
+                          variant="square"
+                          src={user["Profile Image"]}
+                        ></Avatar>
+                        <div className="nameplat">
+                          <CardTitle tag="h8">{user.Name}</CardTitle>
+                          <CardTitle className="picename" tag="h9">
+                            {user.Bet}
+                            {user.Price}
+                          </CardTitle>
+                        </div>
+                        <div>
+                          <AttachMoneyIcon classname="money" />
+                          {user.Price}{" "}
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </div>
+                );
+              })}
+            <Link to="/playing">
+              <Button className="btn__start" size="lg" color="primary">
+                Start
+              </Button>
+            </Link>
+          </div>
         </Col>
         <Col xs="10" className="home__rigth">
           <div className="table__heading">
@@ -96,7 +139,11 @@ function Home() {
                   <th>BETS</th>
                   <th>WINS</th>
                   <th>LOSS</th>
-                  <th>PRICE</th>
+                  <th>
+                    {" "}
+                    <AttachMoneyIcon classname="money" />
+                    PRICE
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -123,7 +170,7 @@ function Home() {
                         <td>{user.Bet}</td>
                         <td></td>
                         <td></td>
-                        <td>{user.Price}</td>
+                        <td> {user.Price}</td>
                       </tr>
                     );
                   })}
